@@ -426,7 +426,7 @@ public abstract class AbstractLoanScheduleGenerator implements LoanScheduleGener
                                                 .isGreaterThan(unprocessed)) {
                                             earlyPaidAmount = earlyPaidAmount.minus(unprocessed);
                                             updateMapWithAmount(principalPortionMap, unprocessed.negated(), applicableDate);
-                                            LoanTransaction loanTransaction = LoanTransaction.repayment(null, unprocessed, null,
+                                            LoanTransaction loanTransaction = LoanTransaction.repayment(null, unprocessed, null,null,
                                                     detail.getTransactionDate(), null, DateUtils.getLocalDateTimeOfTenant(), null);
                                             RecalculationDetail recalculationDetail = new RecalculationDetail(detail.getTransactionDate(),
                                                     loanTransaction);
@@ -434,7 +434,7 @@ public abstract class AbstractLoanScheduleGenerator implements LoanScheduleGener
                                             break;
                                         }
                                     }
-                                    LoanTransaction loanTransaction = LoanTransaction.repayment(null, unprocessed, null, scheduledDueDate,
+                                    LoanTransaction loanTransaction = LoanTransaction.repayment(null, unprocessed, null,null, scheduledDueDate,
                                             null, DateUtils.getLocalDateTimeOfTenant(), null);
                                     RecalculationDetail recalculationDetail = new RecalculationDetail(scheduledDueDate, loanTransaction);
                                     unprocessedTransactions.add(recalculationDetail);

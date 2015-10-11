@@ -34,7 +34,7 @@ public final class CalculateLoanScheduleQueryFromApiJsonHelper {
      * The parameters supported for this command.
      */
     final Set<String> supportedParameters = new HashSet<>(Arrays.asList("id", "clientId", "groupId", "loanType", "calendarId", "productId",
-            "accountNo", "externalId", "fundId", "loanOfficerId", "loanPurposeId", "transactionProcessingStrategyId", "principal",
+            "accountNo", "externalId", "fundId", "loanOfficerId","dsaOfficerId", "loanPurposeId", "transactionProcessingStrategyId", "principal",
             "inArrearsTolerance", "interestRatePerPeriod","flatinterestRatePerPeriod", "repaymentEvery", "numberOfRepayments", "loanTermFrequency",
             "loanTermFrequencyType", "repaymentFrequencyType", "amortizationType", "interestType", "interestCalculationPeriodType", "interestRateFrequencyType", 
             "expectedDisbursementDate", "repaymentsStartingFromDate", "graceOnPrincipalPayment", "graceOnInterestPayment",

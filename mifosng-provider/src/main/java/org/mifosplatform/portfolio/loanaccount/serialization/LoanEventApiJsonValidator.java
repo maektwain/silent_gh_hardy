@@ -65,7 +65,7 @@ public final class LoanEventApiJsonValidator {
         } else {
             disbursementParameters = new HashSet<>(Arrays.asList("actualDisbursementDate", "externalId", "note", "locale",
                     "dateFormat", "paymentTypeId","paymentToWhomId" ,"accountNumber", "checkNumber", "routingCode", "receiptNumber", "bankNumber",
-                    LoanApiConstants.principalDisbursedParameterName, LoanApiConstants.emiAmountParameterName));
+                    LoanApiConstants.principalDisbursedParameterName,"netAmount", LoanApiConstants.emiAmountParameterName));
         }
 
         final Type typeOfMap = new TypeToken<Map<String, Object>>() {}.getType();
@@ -85,6 +85,8 @@ public final class LoanEventApiJsonValidator {
                 LoanApiConstants.principalDisbursedParameterName, element);
         baseDataValidator.reset().parameter(LoanApiConstants.principalDisbursedParameterName).value(principal).ignoreIfNull()
                 .positiveAmount();
+        final BigDecimal netAmount = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed("netAmount", element);
+        baseDataValidator.reset().parameter("netAmount").value(netAmount).ignoreIfNull().positiveAmount();
 
         final BigDecimal emiAmount = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(LoanApiConstants.emiAmountParameterName,
                 element);

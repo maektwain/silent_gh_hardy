@@ -106,4 +106,7 @@ public class LoanSummaryData {
     public BigDecimal getTotalPaidFeeCharges() {
         return feeChargesPaid ;
     }
+    public BigDecimal getTotalFeesDueAtDisbursement(){
+    	return this.feeChargesDueAtDisbursementCharged;
+    }
 }

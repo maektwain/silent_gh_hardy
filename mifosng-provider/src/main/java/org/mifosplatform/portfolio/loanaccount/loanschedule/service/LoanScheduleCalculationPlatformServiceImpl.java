@@ -183,7 +183,7 @@ public class LoanScheduleCalculationPlatformServiceImpl implements LoanScheduleC
             modifiedTransactions.add(LoanTransaction.copyTransactionProperties(loanTransaction));
         }
         if (isNewPaymentRequired) {
-            LoanTransaction ondayPaymentTransaction = LoanTransaction.repayment(null, totalAmount, null, today, null,
+            LoanTransaction ondayPaymentTransaction = LoanTransaction.repayment(null, totalAmount, null,null, today, null,
                     DateUtils.getLocalDateTimeOfTenant(), null);
             modifiedTransactions.add(ondayPaymentTransaction);
         }

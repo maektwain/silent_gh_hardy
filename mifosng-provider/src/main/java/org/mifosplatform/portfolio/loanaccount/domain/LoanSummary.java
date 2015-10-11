@@ -28,7 +28,7 @@ public final class LoanSummary {
     // derived totals fields
     @Column(name = "principal_disbursed_derived", scale = 6, precision = 19)
     private BigDecimal totalPrincipalDisbursed;
-
+    
     @Column(name = "principal_repaid_derived", scale = 6, precision = 19)
     private BigDecimal totalPrincipalRepaid;
 
@@ -279,6 +279,8 @@ public final class LoanSummary {
 	public BigDecimal getTotalPrincipalDisbursed() {
         return this.totalPrincipalDisbursed;
     }
+	
+
 
     public BigDecimal getTotalPrincipalRepaid() {
         return this.totalPrincipalRepaid;

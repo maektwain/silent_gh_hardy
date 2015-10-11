@@ -37,6 +37,7 @@ public class LoanTransactionData {
     private final BigDecimal feeChargesPortion;
     private final BigDecimal penaltyChargesPortion;
     private final BigDecimal overpaymentPortion;
+    private final BigDecimal netPortion;
     private final BigDecimal unrecognizedIncomePortion;
     private final String externalId;
     private final AccountTransferData transfer;
@@ -57,7 +58,7 @@ public class LoanTransactionData {
                 loanTransactionData.type, loanTransactionData.paymentDetailData, loanTransactionData.currency, loanTransactionData.date,
                 loanTransactionData.amount, loanTransactionData.principalPortion, loanTransactionData.interestPortion,
                 loanTransactionData.feeChargesPortion, loanTransactionData.penaltyChargesPortion, loanTransactionData.overpaymentPortion,
-                loanTransactionData.unrecognizedIncomePortion, paymentTypeOptions,paymentToWhomOptions, loanTransactionData.externalId,
+                loanTransactionData.unrecognizedIncomePortion,loanTransactionData.netPortion, paymentTypeOptions,paymentToWhomOptions, loanTransactionData.externalId,
                 loanTransactionData.transfer, loanTransactionData.fixedEmiAmount, loanTransactionData.outstandingLoanBalance,
                 loanTransactionData.manuallyReversed);
 
@@ -66,40 +67,40 @@ public class LoanTransactionData {
     public LoanTransactionData(final Long id, final Long officeId, final String officeName, final LoanTransactionEnumData transactionType,
             final PaymentDetailData paymentDetailData, final CurrencyData currency, final LocalDate date, final BigDecimal amount,
             final BigDecimal principalPortion, final BigDecimal interestPortion, final BigDecimal feeChargesPortion,
-            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion, final String externalId,
+            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion, final BigDecimal netPortion,final String externalId,
             final AccountTransferData transfer, BigDecimal fixedEmiAmount, BigDecimal outstandingLoanBalance,
             final BigDecimal unrecognizedIncomePortion,final boolean manuallyReversed) {
         this(id, officeId, officeName, transactionType, paymentDetailData, currency, date, amount, principalPortion, interestPortion,
-                feeChargesPortion, penaltyChargesPortion, overpaymentPortion, unrecognizedIncomePortion, null,null, externalId, transfer,
+                feeChargesPortion, penaltyChargesPortion, overpaymentPortion,netPortion, unrecognizedIncomePortion, null,null, externalId, transfer,
                 fixedEmiAmount, outstandingLoanBalance,manuallyReversed);
     }
 
     public LoanTransactionData(final Long id, final Long officeId, final String officeName, final LoanTransactionEnumData transactionType,
             final PaymentDetailData paymentDetailData, final CurrencyData currency, final LocalDate date, final BigDecimal amount,
             final BigDecimal principalPortion, final BigDecimal interestPortion, final BigDecimal feeChargesPortion,
-            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion, BigDecimal unrecognizedIncomePortion,
+            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion,final BigDecimal netPortion, BigDecimal unrecognizedIncomePortion,
             final Collection<PaymentTypeData> paymentTypeOptions,final Collection<PaymentToWhomData> paymentToWhomOptions, final String externalId, final AccountTransferData transfer,
             final BigDecimal fixedEmiAmount, BigDecimal outstandingLoanBalance,boolean manuallyReversed) {
         this(id, officeId, officeName, transactionType, paymentDetailData, currency, date, amount, principalPortion, interestPortion,
-                feeChargesPortion, penaltyChargesPortion, overpaymentPortion, unrecognizedIncomePortion, paymentTypeOptions,paymentToWhomOptions,externalId,
+                feeChargesPortion, penaltyChargesPortion, overpaymentPortion,netPortion, unrecognizedIncomePortion, paymentTypeOptions,paymentToWhomOptions,externalId,
                 transfer, fixedEmiAmount, outstandingLoanBalance, null,manuallyReversed);
     }
 
     public LoanTransactionData(final Long id, final Long officeId, final String officeName, final LoanTransactionEnumData transactionType,
             final PaymentDetailData paymentDetailData, final CurrencyData currency, final LocalDate date, final BigDecimal amount,
             final BigDecimal principalPortion, final BigDecimal interestPortion, final BigDecimal feeChargesPortion,
-            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion, final BigDecimal unrecognizedIncomePortion,
+            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion,final BigDecimal netPortion, final BigDecimal unrecognizedIncomePortion,
             final String externalId, final AccountTransferData transfer, BigDecimal fixedEmiAmount, BigDecimal outstandingLoanBalance,
             LocalDate submittedOnDate,final boolean manuallyReversed) {
         this(id, officeId, officeName, transactionType, paymentDetailData, currency, date, amount, principalPortion, interestPortion,
-                feeChargesPortion, penaltyChargesPortion, overpaymentPortion, unrecognizedIncomePortion, null,null, externalId, transfer,
+                feeChargesPortion, penaltyChargesPortion, overpaymentPortion,netPortion, unrecognizedIncomePortion, null,null, externalId, transfer,
                 fixedEmiAmount, outstandingLoanBalance, submittedOnDate,manuallyReversed);
     }
 
     public LoanTransactionData(final Long id, final Long officeId, final String officeName, final LoanTransactionEnumData transactionType,
             final PaymentDetailData paymentDetailData, final CurrencyData currency, final LocalDate date, final BigDecimal amount,
             final BigDecimal principalPortion, final BigDecimal interestPortion, final BigDecimal feeChargesPortion,
-            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion, final BigDecimal unrecognizedIncomePortion,
+            final BigDecimal penaltyChargesPortion, final BigDecimal overpaymentPortion,final BigDecimal netPortion, final BigDecimal unrecognizedIncomePortion,
             final Collection<PaymentTypeData> paymentTypeOptions, final Collection<PaymentToWhomData> paymentToWhomOptions,final String externalId, final AccountTransferData transfer,
             final BigDecimal fixedEmiAmount, BigDecimal outstandingLoanBalance, final LocalDate submittedOnDate,final boolean manuallyReversed) {
         this.id = id;
@@ -115,6 +116,7 @@ public class LoanTransactionData {
         this.feeChargesPortion = feeChargesPortion;
         this.penaltyChargesPortion = penaltyChargesPortion;
         this.unrecognizedIncomePortion = unrecognizedIncomePortion;
+        this.netPortion = netPortion;
         this.paymentTypeOptions = paymentTypeOptions;
         this.paymentToWhomOptions = paymentToWhomOptions;
         this.externalId = externalId;
@@ -128,9 +130,9 @@ public class LoanTransactionData {
 
     public LoanTransactionData(Long id, LoanTransactionEnumData transactionType, LocalDate date, BigDecimal totalAmount,
             BigDecimal principalPortion, BigDecimal interestPortion, BigDecimal feeChargesPortion, BigDecimal penaltyChargesPortion,
-            BigDecimal overPaymentPortion, BigDecimal unrecognizedIncomePortion, BigDecimal outstandingLoanBalance,final boolean manuallyReversed) {
+            BigDecimal overPaymentPortion,BigDecimal netPortion, BigDecimal unrecognizedIncomePortion, BigDecimal outstandingLoanBalance,final boolean manuallyReversed) {
         this(id, null, null, transactionType, null, null, date, totalAmount, principalPortion, interestPortion, feeChargesPortion,
-                penaltyChargesPortion, overPaymentPortion, unrecognizedIncomePortion, null, null, null, null, outstandingLoanBalance, null,manuallyReversed);
+                penaltyChargesPortion, overPaymentPortion,netPortion, unrecognizedIncomePortion, null, null, null, null, outstandingLoanBalance, null,manuallyReversed);
     }
 
     public LocalDate dateOf() {
@@ -154,5 +156,8 @@ public class LoanTransactionData {
     
     public BigDecimal getInterestPortion() {
         return this.interestPortion;
+    }
+    public BigDecimal getNetPortion(){
+    	return this.netPortion;
     }
 }

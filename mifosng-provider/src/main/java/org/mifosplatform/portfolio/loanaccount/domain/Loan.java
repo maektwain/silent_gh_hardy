@@ -334,6 +334,9 @@ public class Loan extends AbstractPersistable<Long> {
 
     @Column(name = "approved_principal", scale = 6, precision = 19, nullable = false)
     private BigDecimal approvedPrincipal;
+    
+    @Column(name = "net_principal_disbursed", scale = 6, precision = 19, nullable = false)
+    private BigDecimal netDisbursedAmount;
 
     @Column(name = "fixed_emi_amount", scale = 6, precision = 19, nullable = true)
     private BigDecimal fixedEmiAmount;
@@ -466,6 +469,7 @@ public class Loan extends AbstractPersistable<Long> {
         this.maxOutstandingLoanBalance = maxOutstandingLoanBalance;
         this.disbursementDetails = disbursementDetails;
         this.approvedPrincipal = this.loanRepaymentScheduleDetail.getPrincipal().getAmount();
+        this.netDisbursedAmount = getApprovedPrincipal().subtract(deriveSumTotalOfChargesDueAtDisbursement());
         this.createStandingInstructionAtDisbursement = createStandingInstructionAtDisbursement;
 
         /*
@@ -2623,7 +2627,8 @@ public class Loan extends AbstractPersistable<Long> {
          **/
 
         Money disbursentMoney = Money.zero(getCurrency());
-        final LoanTransaction chargesPayment = LoanTransaction.repaymentAtDisbursement(getOffice(), disbursentMoney, null, disbursedOn,
+        Money netMoneyDisBursed = Money.zero(getCurrency());
+        final LoanTransaction chargesPayment = LoanTransaction.repaymentAtDisbursement(getOffice(), disbursentMoney,netMoneyDisBursed, null, disbursedOn,
                 null, createdDate, currentUser);
         final Integer installmentNumber = null;
         for (final LoanCharge charge : charges()) {
@@ -3765,6 +3770,11 @@ public class Loan extends AbstractPersistable<Long> {
         }
         return principal;
     }
+    public BigDecimal getNetDisbursedAmountForTemplate(){
+    	BigDecimal netDisbursedAmount = this.netDisbursedAmount;
+    	return netDisbursedAmount;
+    }
+   
 
     public LocalDate getExpectedFirstRepaymentOnDate() {
         LocalDate firstRepaymentDate = null;
