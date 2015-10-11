@@ -44,7 +44,7 @@ public class GmailBackedPlatformEmailService implements PlatformEmailService {
         	}
         	email.setFrom(authuser, authuserName);
 
-            final StringBuilder subjectBuilder = new StringBuilder().append("MifosX Prototype Demo: ").append(emailDetail.getContactName())
+            final StringBuilder subjectBuilder = new StringBuilder().append("Decimus Financial: ").append(emailDetail.getContactName())
                     .append(" user account creation.");
 
             email.setSubject(subjectBuilder.toString());
@@ -53,7 +53,7 @@ public class GmailBackedPlatformEmailService implements PlatformEmailService {
 
             final StringBuilder messageBuilder = new StringBuilder().append("You are receiving this email as your email account: ")
                     .append(sendToEmail).append(" has being used to create a user account for an organisation named [")
-                    .append(emailDetail.getOrganisationName()).append("] on MifosX Prototype Demo.")
+                    .append(emailDetail.getOrganisationName()).append("] on Decimus Financial.")
                     .append("You can login using the following credentials: username: ").append(emailDetail.getUsername())
                     .append(" password: ").append(unencodedPassword);
 
