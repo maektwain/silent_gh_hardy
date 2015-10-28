@@ -51,6 +51,7 @@ public final class LoanApplicationCommandFromApiJsonHelper {
             "repaymentFrequencyType", "repaymentFrequencyNthDayType", "repaymentFrequencyDayOfWeekType",
             "interestRatePerPeriod",
             "flatinterestRatePerPeriod",
+            "advanceEmiN",
             "amortizationType",
             "interestType",
             "interestCalculationPeriodType",
@@ -220,6 +221,10 @@ public final class LoanApplicationCommandFromApiJsonHelper {
         final BigDecimal flatinterestRatePerPeriod = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(
                 flatInterestRatePerPeriodParameterName,element);
         baseDataValidator.reset().parameter(flatInterestRatePerPeriodParameterName).value(flatinterestRatePerPeriod).notNull().zeroOrPositiveAmount();
+        
+        final String advanceEmiNParameterName = "advanceEmiN";
+        final BigDecimal advanceEmiN = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(advanceEmiNParameterName, element);
+        baseDataValidator.reset().parameter(advanceEmiNParameterName).value(advanceEmiN).notNull().zeroOrPositiveAmount();
 
         final String interestTypeParameterName = "interestType";
         final Integer interestType = this.fromApiJsonHelper.extractIntegerSansLocaleNamed(interestTypeParameterName, element);
@@ -543,6 +548,12 @@ public final class LoanApplicationCommandFromApiJsonHelper {
                     interestRatePerPeriodParameterName, element);
             baseDataValidator.reset().parameter(interestRatePerPeriodParameterName).value(interestRatePerPeriod).notNull()
                     .zeroOrPositiveAmount();
+        }
+        final String advanceEmiNParameterName = "advanceEmiN";
+        if(this.fromApiJsonHelper.parameterExists(advanceEmiNParameterName, element)){
+        	atLeastOneParameterPassedForUpdate = true;
+        	final Integer advanceEmiN = this.fromApiJsonHelper.extractIntegerWithLocaleNamed(advanceEmiNParameterName, element);
+        	baseDataValidator.reset().parameter(advanceEmiNParameterName).value(advanceEmiN).notNull().integerGreaterThanZero();
         }
 
         final String interestTypeParameterName = "interestType";
@@ -991,6 +1002,11 @@ public final class LoanApplicationCommandFromApiJsonHelper {
                         errorcode = "specific." + LoanApiConstants.LOAN_CHARGE_CAN_NOT_BE_ADDED_WITH_INTEREST_CALCULATION_TYPE;
                     }
                 break;
+                
+                case PERCENT_OF_OUTSTANDING_PRINCIPAL:
+                	if(loanCharge.isInstalmentFee()){
+                		errorcode = "installment." + LoanApiConstants.LOAN_CHARGE_CAN_NOT_BE_ADDED_WITH_PRINCIPAL_OUTSTANDING_CALCULATION_TYPE;
+                	}
 
                 default:
                 break;

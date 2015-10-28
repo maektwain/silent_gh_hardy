@@ -98,6 +98,7 @@ import org.mifosplatform.portfolio.loanaccount.exception.LoanOfficerAssignmentDa
 import org.mifosplatform.portfolio.loanaccount.exception.LoanOfficerAssignmentException;
 import org.mifosplatform.portfolio.loanaccount.exception.LoanOfficerUnassignmentDateException;
 import org.mifosplatform.portfolio.loanaccount.exception.MultiDisbursementDataRequiredException;
+import org.mifosplatform.portfolio.loanaccount.loanschedule.data.LoanScheduleDTO;
 import org.mifosplatform.portfolio.loanaccount.loanschedule.domain.AprCalculator;
 import org.mifosplatform.portfolio.loanaccount.loanschedule.domain.LoanApplicationTerms;
 import org.mifosplatform.portfolio.loanaccount.loanschedule.domain.LoanScheduleGenerator;
@@ -340,7 +341,10 @@ public class Loan extends AbstractPersistable<Long> {
 
     @Column(name = "fixed_emi_amount", scale = 6, precision = 19, nullable = true)
     private BigDecimal fixedEmiAmount;
-
+    
+    @Column(name = "advanceEmi_N", scale = 6, precision = 19 , nullable = true )
+    private Integer advanceEmiN;
+    
     @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19, nullable = false)
     private BigDecimal maxOutstandingLoanBalance;
 
@@ -374,18 +378,22 @@ public class Loan extends AbstractPersistable<Long> {
     @Column(name = "guarantee_amount_derived", scale = 6, precision = 19, nullable = true)
     private BigDecimal guaranteeAmountDerived;
 
+    @Temporal(TemporalType.DATE)
+    @Column(name = "interest_recalcualated_on")
+    private Date interestRecalculatedOn;
+
     public static Loan newIndividualLoanApplication(final String accountNo, final Client client, final Integer loanType,
             final LoanProduct loanProduct, final Fund fund, final Staff officer,final Dsa dsaOfficer, final CodeValue loanPurpose,
             final LoanTransactionProcessingStrategy transactionProcessingStrategy,
             final LoanProductRelatedDetail loanRepaymentScheduleDetail, final Set<LoanCharge> loanCharges,
             final Set<LoanCollateral> collateral, final BigDecimal fixedEmiAmount, final Set<LoanDisbursementDetails> disbursementDetails,
-            final BigDecimal maxOutstandingLoanBalance, final Boolean createStandingInstructionAtDisbursement) {
+            final BigDecimal maxOutstandingLoanBalance, final Boolean createStandingInstructionAtDisbursement,final Integer advanceEmiN) {
         final LoanStatus status = null;
         final Group group = null;
         final Boolean syncDisbursementWithMeeting = null;
         return new Loan(accountNo, client, group, loanType, fund, officer,dsaOfficer, loanPurpose, transactionProcessingStrategy, loanProduct,
                 loanRepaymentScheduleDetail, status, loanCharges, collateral, syncDisbursementWithMeeting, fixedEmiAmount,
-                disbursementDetails, maxOutstandingLoanBalance, createStandingInstructionAtDisbursement);
+                disbursementDetails, maxOutstandingLoanBalance, createStandingInstructionAtDisbursement,advanceEmiN);
     }
 
     public static Loan newGroupLoanApplication(final String accountNo, final Group group, final Integer loanType,
@@ -394,12 +402,12 @@ public class Loan extends AbstractPersistable<Long> {
             final LoanProductRelatedDetail loanRepaymentScheduleDetail, final Set<LoanCharge> loanCharges,
             final Set<LoanCollateral> collateral, final Boolean syncDisbursementWithMeeting, final BigDecimal fixedEmiAmount,
             final Set<LoanDisbursementDetails> disbursementDetails, final BigDecimal maxOutstandingLoanBalance,
-            final Boolean createStandingInstructionAtDisbursement) {
+            final Boolean createStandingInstructionAtDisbursement,final Integer advanceEmiN) {
         final LoanStatus status = null;
         final Client client = null;
         return new Loan(accountNo, client, group, loanType, fund, officer,dsaOfficer, loanPurpose, transactionProcessingStrategy, loanProduct,
                 loanRepaymentScheduleDetail, status, loanCharges, collateral, syncDisbursementWithMeeting, fixedEmiAmount,
-                disbursementDetails, maxOutstandingLoanBalance, createStandingInstructionAtDisbursement);
+                disbursementDetails, maxOutstandingLoanBalance, createStandingInstructionAtDisbursement,advanceEmiN);
     }
 
     public static Loan newIndividualLoanApplicationFromGroup(final String accountNo, final Client client, final Group group,
@@ -408,11 +416,11 @@ public class Loan extends AbstractPersistable<Long> {
             final LoanProductRelatedDetail loanRepaymentScheduleDetail, final Set<LoanCharge> loanCharges,
             final Set<LoanCollateral> collateral, final Boolean syncDisbursementWithMeeting, final BigDecimal fixedEmiAmount,
             final Set<LoanDisbursementDetails> disbursementDetails, final BigDecimal maxOutstandingLoanBalance,
-            final Boolean createStandingInstructionAtDisbursement) {
+            final Boolean createStandingInstructionAtDisbursement,final Integer advanceEmiN) {
         final LoanStatus status = null;
         return new Loan(accountNo, client, group, loanType, fund, officer, dsaOfficer,loanPurpose, transactionProcessingStrategy, loanProduct,
                 loanRepaymentScheduleDetail, status, loanCharges, collateral, syncDisbursementWithMeeting, fixedEmiAmount,
-                disbursementDetails, maxOutstandingLoanBalance, createStandingInstructionAtDisbursement);
+                disbursementDetails, maxOutstandingLoanBalance, createStandingInstructionAtDisbursement,advanceEmiN);
     }
 
     protected Loan() {
@@ -424,7 +432,7 @@ public class Loan extends AbstractPersistable<Long> {
             final LoanProduct loanProduct, final LoanProductRelatedDetail loanRepaymentScheduleDetail, final LoanStatus loanStatus,
             final Set<LoanCharge> loanCharges, final Set<LoanCollateral> collateral, final Boolean syncDisbursementWithMeeting,
             final BigDecimal fixedEmiAmount, final Set<LoanDisbursementDetails> disbursementDetails,
-            final BigDecimal maxOutstandingLoanBalance, final Boolean createStandingInstructionAtDisbursement) {
+            final BigDecimal maxOutstandingLoanBalance, final Boolean createStandingInstructionAtDisbursement,final Integer advanceEmiN) {
 
         this.loanRepaymentScheduleDetail = loanRepaymentScheduleDetail;
         this.loanRepaymentScheduleDetail.validateRepaymentPeriodWithGraceSettings();
@@ -469,8 +477,11 @@ public class Loan extends AbstractPersistable<Long> {
         this.maxOutstandingLoanBalance = maxOutstandingLoanBalance;
         this.disbursementDetails = disbursementDetails;
         this.approvedPrincipal = this.loanRepaymentScheduleDetail.getPrincipal().getAmount();
-        this.netDisbursedAmount = getApprovedPrincipal().subtract(deriveSumTotalOfChargesDueAtDisbursement());
+        this.netDisbursedAmount = BigDecimal.ZERO;
+        
+        //this.netDisbursedAmount = getApprovedPrincipal().subtract(deriveSumTotalOfChargesDueAtDisbursement());
         this.createStandingInstructionAtDisbursement = createStandingInstructionAtDisbursement;
+        this.advanceEmiN = advanceEmiN;
 
         /*
          * During loan origination stage and before loan is approved
@@ -508,8 +519,8 @@ public class Loan extends AbstractPersistable<Long> {
     private Set<LoanCharge> associateChargesWithThisLoan(final Set<LoanCharge> loanCharges) {
         for (final LoanCharge loanCharge : loanCharges) {
             loanCharge.update(this);
-            if(loanCharge.getTrancheDisbursementCharge() != null) {
-                addTrancheLoanCharge(loanCharge.getCharge()) ;    
+            if (loanCharge.getTrancheDisbursementCharge() != null) {
+                addTrancheLoanCharge(loanCharge.getCharge());
             }
         }
         return loanCharges;
@@ -582,7 +593,7 @@ public class Loan extends AbstractPersistable<Long> {
         }
 
         this.charges.add(loanCharge);
-        
+
         this.summary = updateSummaryWithTotalFeeChargesDueAtDisbursement(deriveSumTotalOfChargesDueAtDisbursement());
 
         // store Id's of existing loan transactions and existing reversed loan
@@ -926,9 +937,12 @@ public class Loan extends AbstractPersistable<Long> {
         Money chargeComponent = amountWaived;
         if (isPeriodicAccrualAccountingEnabledOnLoanProduct()) {
             Money receivableCharge = Money.zero(getCurrency());
-            if(loanInstallmentNumber !=null){
-                receivableCharge  = accruedCharge.minus(loanCharge.getInstallmentLoanCharge(loanInstallmentNumber).getAmountPaid(getCurrency()));
-            }else{ receivableCharge = accruedCharge.minus(loanCharge.getAmountPaid(getCurrency()));}
+            if (loanInstallmentNumber != null) {
+                receivableCharge = accruedCharge.minus(loanCharge.getInstallmentLoanCharge(loanInstallmentNumber).getAmountPaid(
+                        getCurrency()));
+            } else {
+                receivableCharge = accruedCharge.minus(loanCharge.getAmountPaid(getCurrency()));
+            }
             if (receivableCharge.isLessThanZero()) {
                 receivableCharge = amountWaived.zero();
             }
@@ -944,10 +958,11 @@ public class Loan extends AbstractPersistable<Long> {
             feeChargesWaived = Money.zero(loanCurrency());
         }
 
-        LocalDate transactionDate = DateUtils.getLocalDateOfTenant();
+        LocalDate transactionDate = getDisbursementDate();
         if (loanCharge.isSpecifiedDueDate()) {
             transactionDate = loanCharge.getDueLocalDate();
         }
+        scheduleGeneratorDTO.setRecalculateFrom(transactionDate);
 
         updateSummaryWithTotalFeeChargesDueAtDisbursement(deriveSumTotalOfChargesDueAtDisbursement());
 
@@ -1138,6 +1153,17 @@ public class Loan extends AbstractPersistable<Long> {
 
     }
 
+    public void updateLoanSchedule(final Collection<LoanRepaymentScheduleInstallment> installments, AppUser currentUser) {
+        this.repaymentScheduleInstallments.clear();
+        for (final LoanRepaymentScheduleInstallment installment : installments) {
+            addRepaymentScheduleInstallment(installment);
+        }
+        updateLoanScheduleDependentDerivedFields();
+        updateLoanSummaryDerivedFields();
+        applyAccurals(currentUser);
+
+    }
+
     /**
      * method updates accrual derived fields on installments and reverse the
      * unprocessed transactions
@@ -1228,8 +1254,8 @@ public class Loan extends AbstractPersistable<Long> {
             updateLoanOutstandingBalaces();
         }
     }
-    
-    public void updateLoanSummarAndStatus(){
+
+    public void updateLoanSummarAndStatus() {
         updateLoanSummaryDerivedFields();
         doPostLoanTransactionChecks(getLastUserTransactionDate(), loanLifecycleStateMachine);
     }
@@ -1520,9 +1546,9 @@ public class Loan extends AbstractPersistable<Long> {
     }
 
     public boolean isMultiDisburmentLoan() {
-        return this.loanProduct.isMultiDisburseLoan() ;
+        return this.loanProduct.isMultiDisburseLoan();
     }
-    
+
     /**
      * Update interest recalculation settings if product configuration changes
      */
@@ -1698,12 +1724,13 @@ public class Loan extends AbstractPersistable<Long> {
         List<Long> loanChargeIds = fetchLoanChargeIds();
         int chargeIdLength = loanChargeIds.size();
         String chargeIds = null;
-        //From modify application page, if user removes all charges, we should get empty array. 
-        //So we need to remove all charges applied for this loan
+        // From modify application page, if user removes all charges, we should
+        // get empty array.
+        // So we need to remove all charges applied for this loan
         boolean removeAllChages = false;
         if (jsonCommand.parameterExists(LoanApiConstants.chargesParameterName)) {
             JsonArray chargesArray = jsonCommand.arrayOfParameterNamed(LoanApiConstants.chargesParameterName);
-            if (chargesArray.size() == 0) removeAllChages = true; 
+            if (chargesArray.size() == 0) removeAllChages = true;
         }
 
         if (jsonCommand.parameterExists(LoanApiConstants.disbursementDataParameterName)) {
@@ -1792,13 +1819,13 @@ public class Loan extends AbstractPersistable<Long> {
             this.disbursementDetails.add(disbursementDetails);
             for (LoanTrancheCharge trancheCharge : trancheCharges) {
                 Charge chargeDefinition = trancheCharge.getCharge();
-                    final LoanCharge loanCharge = LoanCharge.createNewWithoutLoan(chargeDefinition, principal, null, null, null,
-                            new LocalDate(expectedDisbursementDate), null, null);
-                    loanCharge.update(this);
-                    LoanTrancheDisbursementCharge loanTrancheDisbursementCharge = new LoanTrancheDisbursementCharge(loanCharge,
-                            disbursementDetails);
-                    loanCharge.updateLoanTrancheDisbursementCharge(loanTrancheDisbursementCharge);
-                    addLoanCharge(loanCharge);
+                final LoanCharge loanCharge = LoanCharge.createNewWithoutLoan(chargeDefinition, principal, null, null, null, new LocalDate(
+                        expectedDisbursementDate), null, null);
+                loanCharge.update(this);
+                LoanTrancheDisbursementCharge loanTrancheDisbursementCharge = new LoanTrancheDisbursementCharge(loanCharge,
+                        disbursementDetails);
+                loanCharge.updateLoanTrancheDisbursementCharge(loanTrancheDisbursementCharge);
+                addLoanCharge(loanCharge);
             }
             actualChanges.put(LoanApiConstants.disbursementDataParameterName, expectedDisbursementDate + "-" + principal);
             actualChanges.put("recalculateLoanSchedule", true);
@@ -2153,6 +2180,9 @@ public class Loan extends AbstractPersistable<Long> {
                 if (disbursementDataArray != null) {
                     updateDisbursementDetails(command, actualChanges);
                 }
+            }if (this.netDisbursedAmount.compareTo(this.netDisbursedAmount) == 0.000000 ){
+            			this.netDisbursedAmount = approvedLoanAmount.subtract(deriveSumTotalOfChargesDueAtDisbursement());
+            			
             }
             if (loanProduct.isMultiDisburseLoan()) {
                 recalculateAllCharges();
@@ -4904,9 +4934,10 @@ public class Loan extends AbstractPersistable<Long> {
     public void regenerateRepaymentScheduleWithInterestRecalculation(final ScheduleGeneratorDTO generatorDTO, final AppUser currentUser) {
 
         LocalDate lastTransactionDate = getLastUserTransactionDate();
-        final LoanScheduleModel loanSchedule = getRecalculatedSchedule(generatorDTO);
+        final LoanScheduleDTO loanSchedule = getRecalculatedSchedule(generatorDTO);
         if (loanSchedule == null) { return; }
-        updateLoanSchedule(loanSchedule, currentUser);
+        updateLoanSchedule(loanSchedule.getInstallments(), currentUser);
+        this.interestRecalculatedOn = DateUtils.getDateOfTenant();
         LocalDate lastRepaymentDate = this.getLastRepaymentPeriodDueDate();
         Set<LoanCharge> charges = this.charges();
         for (LoanCharge loanCharge : charges) {
@@ -4943,7 +4974,7 @@ public class Loan extends AbstractPersistable<Long> {
         }
     }
 
-    private LoanScheduleModel getRecalculatedSchedule(final ScheduleGeneratorDTO generatorDTO) {
+    private LoanScheduleDTO getRecalculatedSchedule(final ScheduleGeneratorDTO generatorDTO) {
 
         if (!this.repaymentScheduleDetail().isInterestRecalculationEnabled() || isNpa || !isOpen()) { return null; }
         final InterestMethod interestMethod = this.loanRepaymentScheduleDetail.getInterestMethod();
@@ -4959,10 +4990,9 @@ public class Loan extends AbstractPersistable<Long> {
         final LoanRepaymentScheduleTransactionProcessor loanRepaymentScheduleTransactionProcessor = this.transactionProcessorFactory
                 .determineProcessor(this.transactionProcessingStrategy);
 
-        final LoanScheduleModel loanSchedule = loanScheduleGenerator.rescheduleNextInstallments(mc, loanApplicationTerms, charges(),
-                generatorDTO.getHolidayDetailDTO(), retreiveListOfTransactionsPostDisbursementExcludeAccruals(),
-                loanRepaymentScheduleTransactionProcessor);
-        return loanSchedule;
+        return loanScheduleGenerator.rescheduleNextInstallments(mc, loanApplicationTerms, charges(), generatorDTO.getHolidayDetailDTO(),
+                retreiveListOfTransactionsPostDisbursementExcludeAccruals(), loanRepaymentScheduleTransactionProcessor,
+                repaymentScheduleInstallments, generatorDTO.getRecalculateFrom());
     }
 
     public LoanApplicationTerms constructLoanApplicationTerms(final ApplicationCurrency applicationCurrency,
@@ -5064,8 +5094,8 @@ public class Loan extends AbstractPersistable<Long> {
                     getApprovedPrincipal());
             final LoanRepaymentScheduleTransactionProcessor loanRepaymentScheduleTransactionProcessor = this.transactionProcessorFactory
                     .determineProcessor(this.transactionProcessingStrategy);
-            installment = loanScheduleGenerator.calculatePrepaymentAmount(this.repaymentScheduleInstallments, getCurrency(), onDate,
-                    loanApplicationTerms, mc, charges(), holidayDetailDTO, retreiveListOfTransactionsPostDisbursementExcludeAccruals(),
+            installment = loanScheduleGenerator.calculatePrepaymentAmount(getCurrency(), onDate, loanApplicationTerms, mc, charges(),
+                    holidayDetailDTO, retreiveListOfTransactionsPostDisbursementExcludeAccruals(),
                     loanRepaymentScheduleTransactionProcessor);
         } else {
             installment = this.getTotalOutstandingOnLoan();
@@ -5098,6 +5128,16 @@ public class Loan extends AbstractPersistable<Long> {
             accruedTill = new LocalDate(this.accruedTill);
         }
         return accruedTill;
+    }
+
+    public LocalDate fetchInterestRecalculateFromDate() {
+        LocalDate interestRecalculatedOn = null;
+        if (this.interestRecalculatedOn != null) {
+            interestRecalculatedOn = getDisbursementDate();
+        } else {
+            interestRecalculatedOn = new LocalDate(this.interestRecalculatedOn);
+        }
+        return interestRecalculatedOn;
     }
 
     private void updateLoanOutstandingBalaces() {
@@ -5523,8 +5563,8 @@ public class Loan extends AbstractPersistable<Long> {
     }
 
     public void addTrancheLoanCharge(Charge charge) {
-        if(!trancheCharges.contains(charge)) {
-            trancheCharges.add(new LoanTrancheCharge(charge, this));    
+        if (!trancheCharges.contains(charge)) {
+            trancheCharges.add(new LoanTrancheCharge(charge, this));
         }
     }
 

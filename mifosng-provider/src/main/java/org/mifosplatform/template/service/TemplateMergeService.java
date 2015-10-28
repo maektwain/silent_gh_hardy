@@ -49,7 +49,7 @@ public class TemplateMergeService {
     // }
 
     public void setAuthToken(final String authToken) {
-        this.authToken = authToken;
+        this.authToken =  authToken;
     }
 
     public String compile(final Template template, final Map<String, Object> scopes) throws MalformedURLException, IOException {

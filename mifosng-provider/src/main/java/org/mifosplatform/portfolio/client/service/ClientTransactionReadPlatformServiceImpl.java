@@ -63,14 +63,14 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
                     "tr.currency_code as currencyCode, curr.decimal_places as currencyDigits, curr.currency_multiplesof as inMultiplesOf, ");
             sqlBuilder.append("curr.name as currencyName, curr.internationalized_name_code as currencyNameCode,  ");
             sqlBuilder.append("curr.display_symbol as currencyDisplaySymbol,  ");
-            sqlBuilder.append("pt.value as paymentTypeName  ");
+            sqlBuilder.append("pt.value as paymentTypeName,");
             sqlBuilder.append("ptm.value as paymentToWhomName ");
             sqlBuilder.append("from m_client c  ");
             sqlBuilder.append("join m_client_transaction tr on tr.client_id = c.id ");
             sqlBuilder.append("join m_currency curr on curr.code = tr.currency_code ");
             sqlBuilder.append("left join m_payment_detail pd on tr.payment_detail_id = pd.id  ");
             sqlBuilder.append("left join m_payment_type pt  on pd.payment_type_id = pt.id ");
-            sqlBuilder.append("left join m_payment_to_whom ptm on pd.payment_to_whom_id = ptm.id");
+            sqlBuilder.append("left join m_payment_to_whom ptm on pd.payment_to_whom_id = ptm.id  ");
             sqlBuilder.append("left join m_office o on o.id = tr.office_id ");
             sqlBuilder.append("left join m_client_charge_paid_by ccpb on ccpb.client_transaction_id = tr.id ");
             this.schemaSql = sqlBuilder.toString();

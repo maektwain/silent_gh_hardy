@@ -145,7 +145,7 @@ public final class LoanTransaction extends AbstractPersistable<Long> {
 
     public static LoanTransaction repayment(final Office office, final Money amount,final Money netPortion, final PaymentDetail paymentDetail,
             final LocalDate paymentDate, final String externalId, final LocalDateTime createdDate, final AppUser appUser) {
-        return new LoanTransaction(null, office, LoanTransactionType.REPAYMENT, paymentDetail, amount.getAmount(),netPortion.getAmount(), paymentDate, externalId,
+        return new LoanTransaction(null, office, LoanTransactionType.REPAYMENT, paymentDetail, amount.getAmount(),null, paymentDate, externalId,
                 createdDate, appUser);
     }
 
@@ -325,6 +325,7 @@ public final class LoanTransaction extends AbstractPersistable<Long> {
 
     public void reverse() {
         this.reversed = true;
+        this.loanTransactionToRepaymentScheduleMappings.clear();
     }
 
     public void resetDerivedComponents() {
