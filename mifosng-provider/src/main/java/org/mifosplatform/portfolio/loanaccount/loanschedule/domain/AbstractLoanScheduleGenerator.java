@@ -1916,20 +1916,6 @@ public abstract class AbstractLoanScheduleGenerator implements LoanScheduleGener
             // This will create the recalculation details by applying the
             // transactions
             for (LoanRepaymentScheduleInstallment installment : repaymentScheduleInstallments) {
-                for (Map.Entry<LocalDate, Money> disburseDetail : disburseDetailMap.entrySet()) {
-                    if (disburseDetail.getKey().isAfter(installment.getFromDate())
-                            && !disburseDetail.getKey().isAfter(installment.getDueDate())) {
-                        // creates and add disbursement detail to the repayments
-                        // period
-                        final LoanScheduleModelDisbursementPeriod disbursementPeriod = LoanScheduleModelDisbursementPeriod.disbursement(
-                                disburseDetail.getKey(), disburseDetail.getValue(), chargesDueAtTimeOfDisbursement);
-                        periods.add(disbursementPeriod);
-                        // updates actual outstanding balance with new
-                        // disbursement detail
-                        outstandingBalance = outstandingBalance.plus(disburseDetail.getValue());
-                    }
-                }
-
                 // this will generate the next schedule due date and allows to
                 // process the installment only if recalculate from date is
                 // greater than due date
@@ -1945,6 +1931,20 @@ public abstract class AbstractLoanScheduleGenerator implements LoanScheduleGener
                         break;
                     }
                     periodNumber++;
+                }
+                
+                for (Map.Entry<LocalDate, Money> disburseDetail : disburseDetailMap.entrySet()) {
+                    if (disburseDetail.getKey().isAfter(installment.getFromDate())
+                            && !disburseDetail.getKey().isAfter(installment.getDueDate())) {
+                        // creates and add disbursement detail to the repayments
+                        // period
+                        final LoanScheduleModelDisbursementPeriod disbursementPeriod = LoanScheduleModelDisbursementPeriod.disbursement(
+                                disburseDetail.getKey(), disburseDetail.getValue(), chargesDueAtTimeOfDisbursement);
+                        periods.add(disbursementPeriod);
+                        // updates actual outstanding balance with new
+                        // disbursement detail
+                        outstandingBalance = outstandingBalance.plus(disburseDetail.getValue());
+                    }
                 }
 
                 // calculation of basic fields to start the schedule generation
