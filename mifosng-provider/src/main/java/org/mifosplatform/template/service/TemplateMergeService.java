@@ -23,27 +23,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.auth.AUTH;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.hibernate.mapping.Collection;
 import org.mifosplatform.infrastructure.core.service.ThreadLocalContextUtil;
-import org.mifosplatform.infrastructure.security.data.AuthenticatedOauthUserData;
-import org.mifosplatform.infrastructure.security.data.AuthenticatedUserData;
 import org.mifosplatform.template.domain.Template;
 import org.mifosplatform.template.domain.TemplateFunctions;
-import org.mifosplatform.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.stereotype.Service;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 @Service
 public class TemplateMergeService {
