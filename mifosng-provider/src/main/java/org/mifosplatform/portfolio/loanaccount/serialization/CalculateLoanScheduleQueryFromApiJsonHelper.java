@@ -36,12 +36,12 @@ public final class CalculateLoanScheduleQueryFromApiJsonHelper {
     final Set<String> supportedParameters = new HashSet<>(Arrays.asList("id", "clientId", "groupId", "loanType", "calendarId", "productId",
             "accountNo", "externalId", "fundId", "loanOfficerId","dsaOfficerId", "loanPurposeId", "transactionProcessingStrategyId", "principal",
             "inArrearsTolerance", "interestRatePerPeriod","flatinterestRatePerPeriod", "repaymentEvery", "numberOfRepayments", "loanTermFrequency",
-            "loanTermFrequencyType", "repaymentFrequencyType", "amortizationType", "interestType", "interestCalculationPeriodType", "interestRateFrequencyType", 
+            "loanTermFrequencyType", "repaymentFrequencyType", "amortizationType", "interestType", "interestCalculationPeriodType","advanceEmiN", "interestRateFrequencyType", 
             "expectedDisbursementDate", "repaymentsStartingFromDate", "graceOnPrincipalPayment", "graceOnInterestPayment",
             "graceOnInterestCharged", "interestChargedFromDate", "submittedOnDate", "submittedOnNote", "locale", "dateFormat", "charges",
             "collateral", "syncDisbursementWithMeeting", "linkAccountId", LoanApiConstants.disbursementDataParameterName,
             LoanApiConstants.emiAmountParameterName, LoanApiConstants.maxOutstandingBalanceParameterName,
-            LoanProductConstants.graceOnArrearsAgeingParameterName, LoanProductConstants.recalculationRestFrequencyDateParamName,"createStandingInstructionAtDisbursement"));
+            LoanProductConstants.graceOnArrearsAgeingParameterName, LoanProductConstants.recalculationRestFrequencyDateParamName,"createStandingInstructionAtDisbursement",LoanApiConstants.isFloatingInterestRateParameterName, LoanApiConstants.interestRateDifferentialParameterName));
 
     private final FromJsonHelper fromApiJsonHelper;
 

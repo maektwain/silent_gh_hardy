@@ -5,6 +5,7 @@
  */
 package org.mifosplatform.infrastructure.documentmanagement.api;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,6 +31,7 @@ import org.mifosplatform.infrastructure.core.api.ApiRequestParameterHelper;
 import org.mifosplatform.infrastructure.core.data.CommandProcessingResult;
 import org.mifosplatform.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.mifosplatform.infrastructure.core.serialization.ToApiJsonSerializer;
+import org.mifosplatform.infrastructure.core.service.ThreadLocalContextUtil;
 import org.mifosplatform.infrastructure.documentmanagement.command.DocumentCommand;
 import org.mifosplatform.infrastructure.documentmanagement.data.DocumentData;
 import org.mifosplatform.infrastructure.documentmanagement.data.FileData;
@@ -172,12 +174,17 @@ public class DocumentManagementApiResource {
             @PathParam("documentId") final Long documentId) {
 
         this.context.authenticatedUser().validateHasReadPermission(this.SystemEntityType);
+        final String auth = ThreadLocalContextUtil.getAuthToken();
 
         final FileData fileData = this.documentReadPlatformService.retrieveFileData(entityType, entityId, documentId);
         final ResponseBuilder response = Response.ok(fileData.file());
-        response.header("Content-Disposition", "attachment; filename=\"" + fileData.name() + "\"");
-        response.header("Content-Type", fileData.contentType());
+        
+        response.header("Content-Disposition", "inline; filename=\"" + fileData.name() + "\"");
+        response.header("Authorization", "Bearer" + auth);
 
+        response.header("Content-Type", fileData.contentType());
+        
+        
         return response.build();
     }
 
