@@ -697,6 +697,15 @@ public final class LoanApplicationCommandFromApiJsonHelper {
                     .zeroOrPositiveAmount();
 
         }
+        
+        final String flatinterestRatePerPeriodParameterName = "flatinterestRatePerPeriod";
+        BigDecimal flatinterestRatePerPeriod = existingLoanApplication.getLoanProductRelatedDetail().getFlatInterestRatePerPeriod();
+        if(this.fromApiJsonHelper.parameterExists(flatinterestRatePerPeriodParameterName, element)){
+        	this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(flatinterestRatePerPeriodParameterName, element);
+        	atLeastOneParameterPassedForUpdate = true;
+        }
+        
+        baseDataValidator.reset().parameter(flatinterestRatePerPeriodParameterName).value(flatinterestRatePerPeriod).notNull().zeroOrPositiveAmount();
 
         final String interestCalculationPeriodTypeParameterName = "interestCalculationPeriodType";
         if (this.fromApiJsonHelper.parameterExists(interestCalculationPeriodTypeParameterName, element)) {
