@@ -129,7 +129,7 @@ public class DirectSalesAssociateApiResource {
     @Path("{dsaId}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public String updateStaff(@PathParam("staffId") final Long dsaId, final String apiRequestBodyAsJson) {
+    public String updateStaff(@PathParam("dsaId") final Long dsaId, final String apiRequestBodyAsJson) {
 
         final CommandWrapper commandRequest = new CommandWrapperBuilder().updateDsa(dsaId).withJson(apiRequestBodyAsJson).build();
 
