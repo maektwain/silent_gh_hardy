@@ -427,7 +427,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             final Client client = this.clientRepository.findOneWithNotFoundDetection(clientId);
             validateParentGroupRulesBeforeClientActivation(client);
             final String otp = command.stringValueOfParameterNamed("code");
-            //validateOtpDataBeforeClientActivation(client,otp);
+            validateOtpDataBeforeClientActivation(client,otp);
             validateClientDataBeforeClientActivation(client);
 
 
