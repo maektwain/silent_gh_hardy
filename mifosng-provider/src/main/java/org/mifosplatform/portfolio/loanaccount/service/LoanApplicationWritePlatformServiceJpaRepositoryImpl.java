@@ -641,6 +641,7 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
 
                 existingLoanApplication.updateTransactionProcessingStrategy(strategy);
             }
+            
 
             final String collateralParamName = "collateral";
             if (changes.containsKey(collateralParamName)) {

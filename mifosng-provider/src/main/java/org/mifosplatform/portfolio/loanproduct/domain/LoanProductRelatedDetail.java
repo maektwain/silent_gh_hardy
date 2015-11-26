@@ -395,7 +395,7 @@ public class LoanProductRelatedDetail implements LoanProductMinimumRepaymentSche
             this.interestPeriodFrequencyType = PeriodFrequencyType.fromInt(newValue);
             updateInterestRateDerivedFields(aprCalculator);
         }
-        final String flatInterestRatePerPeriodParamName = "flatInterestRatePerPeriod";
+        final String flatInterestRatePerPeriodParamName = "flatinterestRatePerPeriod";
         if(command.isChangeInBigDecimalParameterNamed(flatInterestRatePerPeriodParamName, this.flatInterestRatePerPeriod)){
         final BigDecimal newValue = command.bigDecimalValueOfParameterNamed(flatInterestRatePerPeriodParamName);
         actualChanges.put(flatInterestRatePerPeriodParamName, newValue);
