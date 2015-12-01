@@ -1380,6 +1380,16 @@ public class Loan extends AbstractPersistable<Long> {
             final Long newValue = command.longValueOfParameterNamed(loanOfficerIdParamName);
             actualChanges.put(loanOfficerIdParamName, newValue);
         }
+        
+        Long existingDsaOfficeId = null;
+        if(this.dsaOfficer != null){
+        	existingDsaOfficeId = this.dsaOfficer.getId();
+        }
+        final String dsaOfficeIdParamName = "dsaOfficeId";
+        if(command.isChangeInLongParameterNamed(dsaOfficeIdParamName, existingDsaOfficeId)){
+        	final Long newValue = command.longValueOfParameterNamed(dsaOfficeIdParamName);
+        	actualChanges.put(dsaOfficeIdParamName, newValue);
+        }
 
         Long existingLoanPurposeId = null;
         if (this.loanPurpose != null) {
