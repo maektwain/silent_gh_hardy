@@ -58,9 +58,7 @@ public class TemplateMergeService {
 
     public String compile(final Template template, final Map<String, Object> scopes) throws MalformedURLException, IOException {
         this.scopes = scopes;
-        this.scopes.put("static", new TemplateFunctions());
-        final String auth = ThreadLocalContextUtil.getAuthToken();
-        setAuthToken(auth);
+        this.scopes.put("static", new TemplateFunctions());	
         final MustacheFactory mf = new DefaultMustacheFactory();
         final Mustache mustache = mf.compile(new StringReader(template.getText()), template.getName());
 
@@ -129,7 +127,7 @@ public class TemplateMergeService {
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();
             if (this.authToken != null) {
-                connection.setRequestProperty("Authorization", "Bearer " + this.authToken);
+                connection.setRequestProperty("Authorization", "Basic " + this.authToken);
             }
             TrustModifier.relaxHostChecking(connection);
 

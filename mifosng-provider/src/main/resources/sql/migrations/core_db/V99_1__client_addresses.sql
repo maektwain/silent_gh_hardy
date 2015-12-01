@@ -4,7 +4,7 @@ CREATE TABLE `m_client_address` (
   `address_type_id` bigint(20) NOT NULL,
   `address_line` varchar(100) NOT NULL DEFAULT '',
   `address_line_two` varchar(100) NOT NULL DEFAULT '',
-  `landmark` varchar(20) NOT NULL DEFAULT '',
+  `landmark` varchar(50) NOT NULL DEFAULT '',
   `city` varchar(20) NOT NULL DEFAULT '',
   `pincode` varchar(6) DEFAULT NULL,
   `isBoth_perma_same` tinyint(1) DEFAULT NULL,

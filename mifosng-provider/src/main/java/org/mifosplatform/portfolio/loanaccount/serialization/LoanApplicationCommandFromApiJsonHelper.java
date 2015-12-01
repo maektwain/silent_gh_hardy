@@ -608,7 +608,7 @@ public final class LoanApplicationCommandFromApiJsonHelper {
         if(this.fromApiJsonHelper.parameterExists(advanceEmiNParameterName, element)){
         	atLeastOneParameterPassedForUpdate = true;
         	final Integer advanceEmiN = this.fromApiJsonHelper.extractIntegerWithLocaleNamed(advanceEmiNParameterName, element);
-        	baseDataValidator.reset().parameter(advanceEmiNParameterName).value(advanceEmiN).notNull().integerGreaterThanZero();
+        	baseDataValidator.reset().parameter(advanceEmiNParameterName).value(advanceEmiN).notNull().integerZeroOrGreater();
         }
 
         final String interestTypeParameterName = "interestType";
