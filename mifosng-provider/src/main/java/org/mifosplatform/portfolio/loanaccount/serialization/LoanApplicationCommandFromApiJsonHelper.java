@@ -841,7 +841,7 @@ public final class LoanApplicationCommandFromApiJsonHelper {
             if (topLevelJsonElement.get("collateral").isJsonArray()) {
 
                 final Type collateralParameterTypeOfMap = new TypeToken<Map<String, Object>>() {}.getType();
-                final Set<String> supportedParameters = new HashSet<>(Arrays.asList("id", "type", "value", "description"));
+                final Set<String> supportedParameters = new HashSet<>(Arrays.asList("id", "type","goldfine","jewellery","maketwo", "value", "description"));
                 final JsonArray array = topLevelJsonElement.get("collateral").getAsJsonArray();
                 for (int i = 1; i <= array.size(); i++) {
                     final JsonObject collateralItemElement = array.get(i - 1).getAsJsonObject();

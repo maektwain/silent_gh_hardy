@@ -2230,7 +2230,7 @@ public class Loan extends AbstractPersistable<Long> {
             	BigDecimal twelve = new BigDecimal(12);
             	BigDecimal findingInterestRate = this.approvedPrincipal.multiply(loanRepaymentScheduleDetail.getAnnualFlatInterestRate()).divide(hundred,2,RoundingMode.HALF_DOWN).divide(twelve,2,RoundingMode.HALF_DOWN).multiply(new BigDecimal(loanRepaymentScheduleDetail.getNumberOfRepayments()));
             	
-            	BigDecimal findingEmi = (findingInterestRate.add(this.approvedPrincipal)).divide(new BigDecimal(loanRepaymentScheduleDetail.getNumberOfRepayments()),2,RoundingMode.HALF_DOWN);   
+            	BigDecimal findingEmi = (findingInterestRate.add(this.approvedPrincipal)).divide(new BigDecimal(loanRepaymentScheduleDetail.getNumberOfRepayments()),0,RoundingMode.HALF_UP);   
             	
             	this.fixedEmiAmount = findingEmi;
             	BigDecimal emittingEmi = new BigDecimal(this.advanceEmiN).multiply(findingEmi);
