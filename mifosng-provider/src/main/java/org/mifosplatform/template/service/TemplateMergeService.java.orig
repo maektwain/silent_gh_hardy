@@ -58,8 +58,12 @@ public class TemplateMergeService {
 
     public String compile(final Template template, final Map<String, Object> scopes) throws MalformedURLException, IOException {
         this.scopes = scopes;
+<<<<<<< HEAD
+        this.scopes.put("static", new TemplateFunctions());	
+=======
         this.scopes.put("static", new TemplateFunctions());
         
+>>>>>>> b9812330150ffeafbcc63a4ae18659a577dc1758
         final MustacheFactory mf = new DefaultMustacheFactory();
         final Mustache mustache = mf.compile(new StringReader(template.getText()), template.getName());
 
@@ -175,7 +179,11 @@ public class TemplateMergeService {
 			System.out.println(value);
 			Map<String, Object> valueAsMap = (Map<String, Object>) value;
 			//Map<String, Object> newValue = null;
+<<<<<<< HEAD
+			Map<String,Object> myNewMap = new HashMap<>();
+=======
 			Map<String,Object> valueAsMap_second = new HashMap<>();
+>>>>>>> b9812330150ffeafbcc63a4ae18659a577dc1758
 			for (Entry<String, Object> valueAsMapEntry : valueAsMap.entrySet()) {
 				System.out.println(valueAsMapEntry);
 				Object valueAsMapEntryValue = valueAsMapEntry.getValue();
@@ -189,15 +197,29 @@ public class TemplateMergeService {
 					String valueAsMapEntryKey = valueAsMapEntry.getKey();
 					int i = 0;
 					for (Object object : valueAsMapEntryValueIterable) {
+<<<<<<< HEAD
+						System.out.println(valueAsMapEntryValueIterable);
+						myNewMap.put(valueAsMapEntryKey + "#" + i, object);
+						//valueAsMap.putAll(myNewMap);
+						
+						++i;
+						expandMapArrays(object);
+						System.out.println(object);
+=======
 						valueAsMap_second.put(valueAsMapEntryKey + "#" + i, object);
 						++i;
 						expandMapArrays(object);
+>>>>>>> b9812330150ffeafbcc63a4ae18659a577dc1758
 						
 					}
 				}
 
 			}
+<<<<<<< HEAD
+			valueAsMap.putAll(myNewMap);
+=======
 			valueAsMap.putAll(valueAsMap_second);
+>>>>>>> b9812330150ffeafbcc63a4ae18659a577dc1758
 
 		}		
 	}
