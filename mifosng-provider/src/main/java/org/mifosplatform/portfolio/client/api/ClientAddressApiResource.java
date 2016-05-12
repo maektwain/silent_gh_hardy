@@ -178,7 +178,7 @@ public class ClientAddressApiResource {
             @PathParam("addressId") final Long clientAddressId, final String apiRequestBodyAsJson) {
 
         try {
-            final CommandWrapper commandRequest = new CommandWrapperBuilder().updateClientIdentifier(clientId, clientAddressId)
+            final CommandWrapper commandRequest = new CommandWrapperBuilder().updateClientAddress(clientId, clientAddressId)
                     .withJson(apiRequestBodyAsJson).build();
 
             final CommandProcessingResult result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);

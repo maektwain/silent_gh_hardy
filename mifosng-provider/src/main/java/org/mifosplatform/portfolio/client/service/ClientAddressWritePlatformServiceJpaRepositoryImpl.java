@@ -113,6 +113,7 @@ public class ClientAddressWritePlatformServiceJpaRepositoryImpl implements Clien
         try {
         	
         	CodeValue addressType = null;
+        	CodeValue stateType = null;
         	final Client client = this.clientRepository.findOneWithNotFoundDetection(clientId);
             final ClientAddress clientAddressForUpdate = this.clientAddressRepository.findOne(addressId);
             if (clientAddressForUpdate == null) {
@@ -127,21 +128,20 @@ public class ClientAddressWritePlatformServiceJpaRepositoryImpl implements Clien
 
                 addressTypeId = addressType.getId();
                 addressTypeLabel = addressType.label();
-                clientAddressForUpdate.update(addressType, addressType);
+                clientAddressForUpdate.updateAddress(addressType);
             }
-            if (changes.containsKey("addressTypeId") && changes.containsKey("address_line") && changes.containsKey("stateTypeId")) {
-                addressTypeId = clientAddressCommand.getAddressTypeId();
-                address_line = clientAddressCommand.getAddressLine();
-                stateTypeId = clientAddressCommand.getStateTypeId();
-            }else if (changes.containsKey("addressTypeId") && !changes.containsKey("address_line") && !changes.containsKey("stateTypeId")) {
-            	addressTypeId = clientAddressCommand.getAddressTypeId();
-                address_line = clientAddressCommand.getAddressLine();
-                stateTypeId = clientAddressCommand.getStateTypeId();
-            }else if (!changes.containsKey("addressTypeId") && changes.containsKey("address_line") && changes.containsKey("stateTypeId")) {
-            	addressTypeId = clientAddressCommand.getAddressTypeId();
-                address_line = clientAddressCommand.getAddressLine();
-                stateTypeId = clientAddressCommand.getStateTypeId();
+            
+            
+            if(changes.containsKey("stateTypeId")){
+            	stateType = this.codeValueRepository.findOneWithNotFoundDetection(stateTypeId);
+            	if (stateType == null){throw new CodeValueNotFoundException(stateTypeId);}
+            	
+            	stateTypeId = stateType.getId();
+            	stateTypeLabel = stateType.label();
+            	
+            	clientAddressForUpdate.updateState(stateType);
             }
+            
             if (!changes.isEmpty()) {
                 this.clientAddressRepository.saveAndFlush(clientAddressForUpdate);
             }

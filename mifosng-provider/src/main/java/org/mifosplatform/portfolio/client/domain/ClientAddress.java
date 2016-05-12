@@ -93,10 +93,14 @@ public class ClientAddress extends AbstractAuditableCustom<AppUser, Long>{
 		this.stateType = stateType;
 	}
 	
-	public void update(final CodeValue addressType, final CodeValue stateType){
+	public void updateAddress(final CodeValue addressType){
 		this.addressType = addressType;
-		this.stateType = stateType;
 	} 
+	
+	public void updateState(final CodeValue stateType){
+		this.stateType = stateType;
+	}
+	
 	
 	public Map<String, Object> update(final JsonCommand command){
 		
@@ -139,13 +143,13 @@ public class ClientAddress extends AbstractAuditableCustom<AppUser, Long>{
         if(command.isChangeInStringParameterNamed(pincodeParamName, this.pincode)){
         	final String newValue = command.stringValueOfParameterNamed(pincodeParamName);
         	actualChanges.put(pincodeParamName, newValue);
-        	this.pincode = StringUtils.defaultIfEmpty(pincodeParamName, null);
+        	this.pincode = StringUtils.defaultIfEmpty(newValue, null);
         }
         final String isBothParamName = "isBoth";
         if(command.isChangeInBooleanParameterNamed(isBothParamName, this.isBoth)){
         	final Boolean newValue = command.booleanObjectValueOfParameterNamed(isBothParamName);
         	actualChanges.put(isBothParamName, newValue);
-        	this.isBoth = Boolean.valueOf(isBothParamName); 
+        	this.isBoth = Boolean.valueOf(newValue); 
         }
         
         

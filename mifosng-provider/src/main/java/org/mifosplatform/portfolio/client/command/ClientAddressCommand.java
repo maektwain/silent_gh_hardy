@@ -89,10 +89,10 @@ public class ClientAddressCommand {
         final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
 
         final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors).resource("clientAddress");
-        String expression = "\\d{5}(-\\d{4})?";
+        //String expression = "\\d{5}(-\\d{4})?";
 
         baseDataValidator.reset().parameter("address_line").value(this.address_line).ignoreIfNull().notBlank();
-        baseDataValidator.reset().parameter("pincode").value(this.pincode).notBlank().notExceedingLengthOf(6).matchesRegularExpression(expression);
+        baseDataValidator.reset().parameter("pincode").value(this.pincode).notBlank().notExceedingLengthOf(6);
 
         // FIXME - KW - add in validation
         // if (command.isDocumentTypeChanged()) {
